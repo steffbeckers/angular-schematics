@@ -50,6 +50,6 @@ exports.strings = {
     pluralize,
     singularize,
     absolutePath,
-    absoluteSrcPath
+    absoluteSrcPath,
 };
 //# sourceMappingURL=strings.js.map

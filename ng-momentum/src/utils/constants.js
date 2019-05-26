@@ -22,6 +22,6 @@ exports.constants = {
     },
     get viewsFolder() {
         return core_1.normalize('/views');
-    }
+    },
 };
 //# sourceMappingURL=constants.js.map

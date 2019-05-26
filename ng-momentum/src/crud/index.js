@@ -21,15 +21,15 @@ function buildProperties(options, voOptions, templateOptions) {
     return (host) => {
         return new Observable_1.Observable((observer) => {
             fetch(options.url)
-                .then(res => res.json())
-                .then(data => {
+                .then((res) => res.json())
+                .then((data) => {
                 //console.debug(JSON.stringify(data));
                 let value = data;
                 if (Array.isArray(data) && data.length > 0) {
                     value = data[0];
                 }
                 const finalObj = {};
-                Object.keys(value).forEach(key => {
+                Object.keys(value).forEach((key) => {
                     finalObj[key] = typeof value[key];
                     if (finalObj[key] !== 'string' && finalObj[key] !== 'boolean' && finalObj[key] !== 'number') {
                         finalObj[key] = 'string';
@@ -86,7 +86,7 @@ function crud(options) {
         // defaults
         const defaultOptions = {
             styleext: json_editor_1.readValueFromJsonFile(host, options.path, 'style'),
-            ui: scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL.toString()
+            ui: scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL.toString(),
         };
         const projectUiFramework = json_editor_1.readValueFromJsonFile(host, options.path, 'uiFramework');
         if (options.uiFramework && options.uiFramework !== scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL) {
@@ -95,34 +95,38 @@ function crud(options) {
         else if (!options.uiFramework && projectUiFramework) {
             defaultOptions.ui = projectUiFramework;
         }
-        options.vo = (options.vo) ? options.vo : options.name;
-        options.voPath = (options.voPath) ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
-        options.service = (options.service) ? options.service : options.name;
-        options.servicePath = (options.servicePath) ? options.servicePath : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
-        options.view = (options.view) ? options.view : options.name;
-        options.viewPath = (options.viewPath) ? options.viewPath : core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.view));
-        options.basePath = (options.eager) ? core_1.normalize(strings_1.strings.dasherize(strings_1.strings.pluralize(options.name))) : core_1.normalize('');
-        const movePath = (options.flat) ?
-            core_1.join(options.path, constants_1.constants.viewsFolder) :
-            core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.name));
+        options.vo = options.vo ? options.vo : options.name;
+        options.voPath = options.voPath ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
+        options.service = options.service ? options.service : options.name;
+        options.servicePath = options.servicePath
+            ? options.servicePath
+            : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
+        options.view = options.view ? options.view : options.name;
+        options.viewPath = options.viewPath ? options.viewPath : core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.view));
+        options.basePath = options.eager ? core_1.normalize(strings_1.strings.dasherize(strings_1.strings.pluralize(options.name))) : core_1.normalize('');
+        const movePath = options.flat
+            ? core_1.join(options.path, constants_1.constants.viewsFolder)
+            : core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.name));
         const voOptions = {
             project: options.project,
             path: options.path,
             name: options.vo,
             spec: options.spec,
-            obj: options.obj
+            obj: options.obj,
         };
-        const templateOptions = Object.assign({}, strings_1.strings, defaultOptions, { 'if-flat': (s) => options.flat ? '' : s }, options);
+        const templateOptions = Object.assign({}, strings_1.strings, defaultOptions, { 'if-flat': (s) => (options.flat ? '' : s) }, options);
         const serviceOptions = {
             project: options.project,
             path: options.path,
             name: options.service,
             spec: options.spec,
-            skipVo: true
+            skipVo: true,
         };
         // determine service endpoint
         if (options.url) {
-            const lastSlash = options.url.charAt(options.url.length - 1) !== '/' ? options.url.lastIndexOf('/') : options.url.lastIndexOf('/', options.url.lastIndexOf('/') - 1);
+            const lastSlash = options.url.charAt(options.url.length - 1) !== '/'
+                ? options.url.lastIndexOf('/')
+                : options.url.lastIndexOf('/', options.url.lastIndexOf('/') - 1);
             serviceOptions.endpoint = options.url.slice(lastSlash);
             serviceOptions.uri = options.url.slice(0, lastSlash);
             serviceOptions.suffix = '';
@@ -132,17 +136,17 @@ function crud(options) {
                 serviceOptions.endpoint = serviceOptions.endpoint.slice(0, lastDot);
             }
         }
-        serviceOptions.endpoint = (serviceOptions.endpoint) ? serviceOptions.endpoint : strings_1.strings.dasherize(options.service);
+        serviceOptions.endpoint = serviceOptions.endpoint ? serviceOptions.endpoint : strings_1.strings.dasherize(options.service);
         const rule = schematics_1.chain([
             options.url ? buildProperties(options, voOptions, templateOptions) : schematics_1.noop(),
             options.skipVo ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.voSchematic, voOptions),
             options.skipService ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.serviceSchematic, serviceOptions),
             schematics_1.mergeWith(schematics_1.apply(schematics_1.url('./files'), [
-                options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
+                options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
                 schematics_1.template(templateOptions),
                 schematics_1.move(movePath),
             ]), schematics_1.MergeStrategy.Default),
-            options.eager ? importIntoCoreModule(options) : addToAppRouting(options)
+            options.eager ? importIntoCoreModule(options) : addToAppRouting(options),
         ]);
         return rule(host, context);
     };

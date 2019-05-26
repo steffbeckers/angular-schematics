@@ -10,7 +10,7 @@ function getVoProperties(host, path, name) {
     }
     const sourceText = buffer.toString('utf-8');
     const source = ts.createSourceFile(modulePath, sourceText, ts.ScriptTarget.Latest, true);
-    return getParametersBySourceFile(source).map(nameType => {
+    return getParametersBySourceFile(source).map((nameType) => {
         return nameType.name;
     });
 }
@@ -26,43 +26,43 @@ function getParametersBySourceFile(sf) {
                 if (node.type.kind === ts.SyntaxKind.AnyKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'any'
+                        type: 'any',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.NumberKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'number'
+                        type: 'number',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.StringKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'string'
+                        type: 'string',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.BooleanKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'boolean'
+                        type: 'boolean',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.SymbolKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'symbol'
+                        type: 'symbol',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.UndefinedKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'undefined'
+                        type: 'undefined',
                     });
                 }
                 else if (node.type.kind === ts.SyntaxKind.NeverKeyword) {
                     parameters.push({
                         name: node.name.text,
-                        type: 'never'
+                        type: 'never',
                     });
                 }
             }

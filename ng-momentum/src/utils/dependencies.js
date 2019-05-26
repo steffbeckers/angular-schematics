@@ -49,12 +49,7 @@ exports.addPackageJsonDependency = addPackageJsonDependency;
 function getPackageJsonDependency(tree, name) {
     const packageJson = _readPackageJson(tree);
     let dep = null;
-    [
-        NodeDependencyType.Default,
-        NodeDependencyType.Dev,
-        NodeDependencyType.Optional,
-        NodeDependencyType.Peer,
-    ].forEach(depType => {
+    [NodeDependencyType.Default, NodeDependencyType.Dev, NodeDependencyType.Optional, NodeDependencyType.Peer].forEach((depType) => {
         if (dep !== null) {
             return;
         }

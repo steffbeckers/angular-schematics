@@ -18,43 +18,54 @@ var UI_FRAMEWORK_OPTION;
 exports.UI_FRAMEWORK_OPTIONS = [UI_FRAMEWORK_OPTION.BASIC, UI_FRAMEWORK_OPTION.MATERIAL, UI_FRAMEWORK_OPTION.BOOTSTRAP];
 function addScriptsToPackageJson() {
     return (host) => {
-        [{
+        [
+            {
                 key: 'start',
-                value: 'ng serve'
-            }, {
+                value: 'ng serve',
+            },
+            {
                 key: 'coverage',
-                value: 'ng test --watch=false --code-coverage'
-            }, {
+                value: 'ng test --watch=false --code-coverage',
+            },
+            {
                 key: 'i18n',
-                value: 'ng xi18n'
-            }, {
+                value: 'ng xi18n',
+            },
+            {
                 key: 'compile',
-                value: 'for lang in en; do ng build --output-path=dist/$lang --prod --base-href=/$lang/ --i18n-file=src/locale/messages.$lang.xlf --i18n-format=xlf --i18n-locale=$lang; done'
-            }, {
+                value: 'for lang in en; do ng build --output-path=dist/$lang --prod --base-href=/$lang/ --i18n-file=src/locale/messages.$lang.xlf --i18n-format=xlf --i18n-locale=$lang; done',
+            },
+            {
                 key: 'docs',
-                value: 'compodoc -p tsconfig.json'
-            }, {
+                value: 'compodoc -p tsconfig.json',
+            },
+            {
                 key: 'serve-docs',
-                value: 'compodoc -s -r 4300'
-            }].forEach(script => json_editor_1.addScriptIntoPackageJson(host, script));
+                value: 'compodoc -s -r 4300',
+            },
+        ].forEach((script) => json_editor_1.addScriptIntoPackageJson(host, script));
         return host;
     };
 }
 function addDependenciesToPackageJson(options) {
     return (host) => {
         if (options.uiFramework === UI_FRAMEWORK_OPTION.MATERIAL) {
-            [{
+            [
+                {
                     type: dependencies_1.NodeDependencyType.Default,
                     name: 'hammerjs',
-                    version: '^2.0.8'
-                }].forEach(dependency => dependencies_1.addPackageJsonDependency(host, dependency));
+                    version: '^2.0.8',
+                },
+            ].forEach((dependency) => dependencies_1.addPackageJsonDependency(host, dependency));
         }
         else if (options.uiFramework === UI_FRAMEWORK_OPTION.BOOTSTRAP) {
-            [{
+            [
+                {
                     type: dependencies_1.NodeDependencyType.Default,
                     name: '@ng-bootstrap/ng-bootstrap',
-                    version: '^2.2.0'
-                }].forEach(dependency => dependencies_1.addPackageJsonDependency(host, dependency));
+                    version: '^2.2.0',
+                },
+            ].forEach((dependency) => dependencies_1.addPackageJsonDependency(host, dependency));
         }
         else {
             return host;
@@ -64,19 +75,24 @@ function addDependenciesToPackageJson(options) {
 }
 function addPWAScriptsToPackageJson() {
     return (host) => {
-        [{
+        [
+            {
                 key: 'ngsw-config',
-                value: 'ngsw-config dist ngsw-config.json'
-            }, {
+                value: 'ngsw-config dist ngsw-config.json',
+            },
+            {
                 key: 'ngsw-copy',
-                value: 'cp ./node_modules/@angular/service-worker/ngsw-worker.js dist/'
-            }, {
+                value: 'cp ./node_modules/@angular/service-worker/ngsw-worker.js dist/',
+            },
+            {
                 key: 'build-prod-ngsw',
-                value: 'ng build --prod && npm run ngsw-config && npm run ngsw-copy'
-            }, {
+                value: 'ng build --prod && npm run ngsw-config && npm run ngsw-copy',
+            },
+            {
                 key: 'serve-prod-ngsw',
-                value: 'npm run build-prod-ngsw && http-server dist -p 8000'
-            }].forEach(script => json_editor_1.addScriptIntoPackageJson(host, script));
+                value: 'npm run build-prod-ngsw && http-server dist -p 8000',
+            },
+        ].forEach((script) => json_editor_1.addScriptIntoPackageJson(host, script));
         return host;
     };
 }
@@ -85,8 +101,7 @@ function updateMainFile(options) {
         const workspace = config_1.getWorkspace(host);
         const project = workspace.projects[options.project];
         let path;
-        if (project && project.architect && project.architect.build &&
-            project.architect.build.options.index) {
+        if (project && project.architect && project.architect.build && project.architect.build.options.index) {
             path = project.architect.build.options.main;
         }
         else {
@@ -98,33 +113,34 @@ function updateMainFile(options) {
 }
 function addOptionsToAngularJson() {
     return (host) => {
-        [{
+        [
+            {
                 key: 'baseHref',
-                value: '/en/'
-            }, {
+                value: '/en/',
+            },
+            {
                 key: 'i18nFile',
-                value: 'src/locale/messages.en.xlf'
-            }, {
+                value: 'src/locale/messages.en.xlf',
+            },
+            {
                 key: 'i18nLocale',
-                value: 'en'
-            }, {
+                value: 'en',
+            },
+            {
                 key: 'i18nFormat',
-                value: 'xlf'
-            }, {
+                value: 'xlf',
+            },
+            {
                 key: 'aot',
-                value: true
-            }].forEach(keyValue => json_editor_1.addValueIntoAngularJsonBuildProjects(host, keyValue));
+                value: true,
+            },
+        ].forEach((keyValue) => json_editor_1.addValueIntoAngularJsonBuildProjects(host, keyValue));
         return host;
     };
 }
 function overwriteFiles(path) {
     return (host) => {
-        [
-            "app.component.html",
-            "app.component.spec.ts",
-            "app.component.ts",
-            "app.module.ts"
-        ].forEach(filename => {
+        ['app.component.html', 'app.component.spec.ts', 'app.component.ts', 'app.module.ts'].forEach((filename) => {
             overwrite_filter_1.deleteFile(host, core_1.join(path, filename));
         });
         return host;
@@ -132,7 +148,7 @@ function overwriteFiles(path) {
 }
 function getProjectSelectedStyleExt(host, path) {
     const value = json_editor_1.readValueFromAngularJsonBuildProjects(host, 'styles');
-    if (!value || !(Array.isArray(value))) {
+    if (!value || !Array.isArray(value)) {
         return 'css';
     }
     const list = value;
@@ -157,7 +173,7 @@ function scaffold(options) {
         const appPath = core_1.join(sourcePath, 'app');
         const defaultOptions = {
             styleext: getProjectSelectedStyleExt(host, sourcePath),
-            ui: UI_FRAMEWORK_OPTION.MATERIAL.valueOf()
+            ui: UI_FRAMEWORK_OPTION.MATERIAL.valueOf(),
         };
         if (options.uiFramework && options.uiFramework !== UI_FRAMEWORK_OPTION.MATERIAL) {
             defaultOptions.ui = options.uiFramework;
@@ -170,26 +186,28 @@ function scaffold(options) {
             options.includePwa ? addPWAScriptsToPackageJson() : schematics_1.noop(),
             overwriteFiles(appPath),
             schematics_1.mergeWith(schematics_1.apply(schematics_1.url('./files'), [
-                options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
-                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
+                options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
+                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
                 schematics_1.template(templateOptions),
                 schematics_1.move(appPath),
             ]), schematics_1.MergeStrategy.Overwrite),
             schematics_1.mergeWith(schematics_1.apply(schematics_1.url('./src-files'), [
-                options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
-                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
+                options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
+                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
                 schematics_1.template(templateOptions),
                 schematics_1.move(sourcePath),
             ]), schematics_1.MergeStrategy.Default),
             schematics_1.mergeWith(schematics_1.apply(schematics_1.url('./project-files'), [
-                options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
-                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
+                options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
+                defaultOptions.styleext ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.styleTemplateFileExtension)),
                 schematics_1.template(templateOptions),
                 schematics_1.move(rootPath),
             ]), schematics_1.MergeStrategy.Default),
-            options.uiFramework === UI_FRAMEWORK_OPTION.MATERIAL ? schematics_1.externalSchematic('@angular/material', 'material-shell', {
-                project: options.project
-            }) : schematics_1.noop(),
+            options.uiFramework === UI_FRAMEWORK_OPTION.MATERIAL
+                ? schematics_1.externalSchematic('@angular/material', 'material-shell', {
+                    project: options.project,
+                })
+                : schematics_1.noop(),
             options.uiFramework === UI_FRAMEWORK_OPTION.MATERIAL ? updateMainFile(options) : schematics_1.noop(),
         ]);
         return rule(host, context);

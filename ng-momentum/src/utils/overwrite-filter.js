@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const schematics_1 = require("@angular-devkit/schematics");
 function overwriteFilter(host, overwrite = false) {
-    return schematics_1.filter(path => {
+    return schematics_1.filter((path) => {
         //console.log(path);
         //console.log(host.exists(path));
         if (overwrite && host.exists(path)) {

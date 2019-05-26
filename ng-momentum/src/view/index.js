@@ -17,8 +17,7 @@ var VIEW_OPTION;
     VIEW_OPTION["FORM"] = "form";
     VIEW_OPTION["TABLE"] = "table";
 })(VIEW_OPTION = exports.VIEW_OPTION || (exports.VIEW_OPTION = {}));
-exports.VIEW_OPTIONS = [VIEW_OPTION.Blank, VIEW_OPTION.List,
-    VIEW_OPTION.DETAILS, VIEW_OPTION.FORM, VIEW_OPTION.TABLE];
+exports.VIEW_OPTIONS = [VIEW_OPTION.Blank, VIEW_OPTION.List, VIEW_OPTION.DETAILS, VIEW_OPTION.FORM, VIEW_OPTION.TABLE];
 /**
  * Reads the VO object to get the parameters to use for the schematic.
  * @param {Schema} options
@@ -71,7 +70,7 @@ function view(options) {
         // defaults
         const defaultOptions = {
             styleext: json_editor_1.readValueFromJsonFile(host, options.path, 'style'),
-            ui: scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL.valueOf()
+            ui: scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL.valueOf(),
         };
         const projectUiFramework = json_editor_1.readValueFromJsonFile(host, options.path, 'uiFramework');
         if (options.uiFramework && options.uiFramework !== scaffold_1.UI_FRAMEWORK_OPTION.MATERIAL) {
@@ -80,39 +79,45 @@ function view(options) {
         else if (!options.uiFramework && projectUiFramework) {
             defaultOptions.ui = projectUiFramework;
         }
-        options.vo = (options.vo) ? options.vo : options.name;
-        options.voPath = (options.voPath) ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
-        options.service = (options.service) ? options.service : options.name;
-        options.servicePath = (options.servicePath) ? options.servicePath : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
-        options.template = (exports.VIEW_OPTIONS.indexOf(options.template) >= 0) ? options.template : VIEW_OPTION.Blank;
-        options.basePath = (options.eager) ? core_1.normalize(strings_1.strings.dasherize(options.name)) : core_1.normalize('');
+        options.vo = options.vo ? options.vo : options.name;
+        options.voPath = options.voPath ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
+        options.service = options.service ? options.service : options.name;
+        options.servicePath = options.servicePath
+            ? options.servicePath
+            : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
+        options.template = exports.VIEW_OPTIONS.indexOf(options.template) >= 0 ? options.template : VIEW_OPTION.Blank;
+        options.basePath = options.eager ? core_1.normalize(strings_1.strings.dasherize(options.name)) : core_1.normalize('');
         // no vo or service necessary for blank model
         if (options.template === VIEW_OPTION.Blank) {
             options.skipService = true;
             options.skipVo = true;
         }
-        const movePath = (options.flat) ?
-            core_1.join(options.path, constants_1.constants.viewsFolder) :
-            core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.name));
-        const templateOptions = Object.assign({}, strings_1.strings, defaultOptions, { 'if-flat': (s) => options.flat ? '' : s }, options);
+        const movePath = options.flat
+            ? core_1.join(options.path, constants_1.constants.viewsFolder)
+            : core_1.join(options.path, constants_1.constants.viewsFolder, strings_1.strings.dasherize(options.name));
+        const templateOptions = Object.assign({}, strings_1.strings, defaultOptions, { 'if-flat': (s) => (options.flat ? '' : s) }, options);
         const rule = schematics_1.chain([
-            options.skipVo ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.voSchematic, {
-                name: options.vo,
-                spec: options.spec,
-                obj: options.obj
-            }),
+            options.skipVo
+                ? schematics_1.noop()
+                : schematics_1.schematic(constants_1.constants.voSchematic, {
+                    name: options.vo,
+                    spec: options.spec,
+                    obj: options.obj,
+                }),
             readVoObjectAndGetParameters(options, templateOptions),
-            options.skipService ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.serviceSchematic, {
-                name: options.service,
-                spec: options.spec,
-                skipVo: true
-            }),
+            options.skipService
+                ? schematics_1.noop()
+                : schematics_1.schematic(constants_1.constants.serviceSchematic, {
+                    name: options.service,
+                    spec: options.spec,
+                    skipVo: true,
+                }),
             schematics_1.mergeWith(schematics_1.apply(schematics_1.url('./files/' + options.template), [
-                options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
+                options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
                 schematics_1.template(templateOptions),
                 schematics_1.move(movePath),
             ]), schematics_1.MergeStrategy.Default),
-            options.eager ? importIntoCoreModule(options) : addToAppRouting(options)
+            options.eager ? importIntoCoreModule(options) : addToAppRouting(options),
         ]);
         return rule(host, context);
     };

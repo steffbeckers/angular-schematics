@@ -21,11 +21,13 @@ function model(options) {
     return (host, context) => {
         setup_1.setupOptions(host, options);
         // defaults
-        options.vo = (options.vo) ? options.vo : options.name;
-        options.voPath = (options.voPath) ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
-        options.service = (options.service) ? options.service : options.name;
-        options.servicePath = (options.servicePath) ? options.servicePath : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
-        options.template = (exports.MODEL_OPTIONS.indexOf(options.template) >= 0) ? options.template : MODEL_OPTION.Blank;
+        options.vo = options.vo ? options.vo : options.name;
+        options.voPath = options.voPath ? options.voPath : core_1.join(options.path, constants_1.constants.voFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.vo)));
+        options.service = options.service ? options.service : options.name;
+        options.servicePath = options.servicePath
+            ? options.servicePath
+            : core_1.join(options.path, constants_1.constants.servicesFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.service)));
+        options.template = exports.MODEL_OPTIONS.indexOf(options.template) >= 0 ? options.template : MODEL_OPTION.Blank;
         // no vo or service necessary for blank model
         if (options.template === MODEL_OPTION.Blank) {
             options.skipService = true;
@@ -37,38 +39,38 @@ function model(options) {
             path: options.path,
             name: options.vo,
             spec: options.spec,
-            obj: options.obj
+            obj: options.obj,
         };
         const serviceOptions = {
             project: options.project,
             path: options.path,
             name: options.service,
             skipVo: true,
-            spec: options.spec
+            spec: options.spec,
         };
-        let movePath = (options.flat) ?
-            core_1.join(options.path, constants_1.constants.modelsFolder) :
-            core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(options.name));
+        let movePath = options.flat
+            ? core_1.join(options.path, constants_1.constants.modelsFolder)
+            : core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(options.name));
         if (options.template === MODEL_OPTION.List) {
-            movePath = (options.flat) ?
-                core_1.join(options.path, constants_1.constants.modelsFolder) :
-                core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.name)));
+            movePath = options.flat
+                ? core_1.join(options.path, constants_1.constants.modelsFolder)
+                : core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(strings_1.strings.pluralize(options.name)));
         }
         else if (options.template === MODEL_OPTION.Selected) {
-            movePath = (options.flat) ?
-                core_1.join(options.path, constants_1.constants.modelsFolder) :
-                core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.name)));
+            movePath = options.flat
+                ? core_1.join(options.path, constants_1.constants.modelsFolder)
+                : core_1.join(options.path, constants_1.constants.modelsFolder, strings_1.strings.dasherize(strings_1.strings.singularize(options.name)));
         }
         // get template source
         const templateSource = schematics_1.apply(schematics_1.url('./files/' + options.template), [
-            options.spec ? schematics_1.noop() : schematics_1.filter(path => !path.endsWith(constants_1.constants.specFileExtension)),
-            schematics_1.template(Object.assign({}, strings_1.strings, { 'if-flat': (s) => options.flat ? '' : s }, options)),
+            options.spec ? schematics_1.noop() : schematics_1.filter((path) => !path.endsWith(constants_1.constants.specFileExtension)),
+            schematics_1.template(Object.assign({}, strings_1.strings, { 'if-flat': (s) => (options.flat ? '' : s) }, options)),
             schematics_1.move(movePath),
         ]);
         const rule = schematics_1.chain([
             options.skipVo ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.voSchematic, voOptions),
             options.skipService ? schematics_1.noop() : schematics_1.schematic(constants_1.constants.serviceSchematic, serviceOptions),
-            schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Default)
+            schematics_1.mergeWith(templateSource, schematics_1.MergeStrategy.Default),
         ]);
         return rule(host, context);
     };

@@ -7,9 +7,7 @@ function appendPropertyInAstObject(recorder, node, propertyName, value, indent) 
         const last = node.properties[node.properties.length - 1];
         recorder.insertRight(last.start.offset + last.text.replace(/\s+$/, '').length, ',');
     }
-    recorder.insertLeft(node.end.offset - 1, '  '
-        + `"${propertyName}": ${JSON.stringify(value, null, 2).replace(/\n/g, indentStr)}`
-        + indentStr.slice(0, -2));
+    recorder.insertLeft(node.end.offset - 1, '  ' + `"${propertyName}": ${JSON.stringify(value, null, 2).replace(/\n/g, indentStr)}` + indentStr.slice(0, -2));
 }
 exports.appendPropertyInAstObject = appendPropertyInAstObject;
 function insertPropertyInAstObjectInOrder(recorder, node, propertyName, value, indent) {
@@ -40,12 +38,8 @@ function insertPropertyInAstObjectInOrder(recorder, node, propertyName, value, i
         return;
     }
     const indentStr = _buildIndent(indent);
-    const insertIndex = insertAfterProp === null
-        ? node.start.offset + 1
-        : insertAfterProp.end.offset + 1;
-    recorder.insertRight(insertIndex, indentStr
-        + `"${propertyName}": ${JSON.stringify(value, null, 2).replace(/\n/g, indentStr)}`
-        + ',');
+    const insertIndex = insertAfterProp === null ? node.start.offset + 1 : insertAfterProp.end.offset + 1;
+    recorder.insertRight(insertIndex, indentStr + `"${propertyName}": ${JSON.stringify(value, null, 2).replace(/\n/g, indentStr)}` + ',');
 }
 exports.insertPropertyInAstObjectInOrder = insertPropertyInAstObjectInOrder;
 function appendValueInAstArray(recorder, node, value, indent = 4) {
@@ -55,9 +49,7 @@ function appendValueInAstArray(recorder, node, value, indent = 4) {
         const last = node.elements[node.elements.length - 1];
         recorder.insertRight(last.start.offset + last.text.replace(/\s+$/, '').length, ',');
     }
-    recorder.insertLeft(node.end.offset - 1, '  '
-        + JSON.stringify(value, null, 2).replace(/\n/g, indentStr)
-        + indentStr.slice(0, -2));
+    recorder.insertLeft(node.end.offset - 1, '  ' + JSON.stringify(value, null, 2).replace(/\n/g, indentStr) + indentStr.slice(0, -2));
 }
 exports.appendValueInAstArray = appendValueInAstArray;
 function findPropertyInAstObject(node, propertyName) {
