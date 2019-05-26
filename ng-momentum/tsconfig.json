@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "tsconfig",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,
@@ -19,16 +16,10 @@
     "sourceMap": true,
     "strictNullChecks": false,
     "target": "es6",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "types": ["jasmine", "node"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "src/*/files/**/*",
-    "src/*/temp/**/*"
-  ]
+  "linterOptions": {
+    "include": ["src/**/*"],
+    "exclude": ["src/*/files/**/*", "src/*/temp/**/*"]
+  }
 }
